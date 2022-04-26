@@ -10,14 +10,17 @@ urlpatterns = [
     # name the URL
 
     # path for about view
+    path('about', views.about, name='aboutpage'),
 
     # path for contact us view
 
     # path for registration
+    path('register',views.registration_request, name='registration'),
 
     # path for login
 
     # path for logout
+    path('logout', views.logout_request, name='logout'),
 
     path(route='', view=views.get_dealerships, name='index'),
 
