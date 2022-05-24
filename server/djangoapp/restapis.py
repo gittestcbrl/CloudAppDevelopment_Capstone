@@ -21,6 +21,7 @@ def get_request(url, **kwargs):
         print("Network exception occurred")
     status_code = response.status_code
     print("With status {} ".format(status_code))
+    # print('response', response.json)
     json_data = json.loads(response.text)
     return json_data
 
@@ -58,6 +59,30 @@ def get_dealers_from_cf(url, **kwargs):
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
+def get_dealer_reviews_from_cf(url, **kwargs):
+    results = []
+    # print(kwargs['dealerId'])
+    # Call get_request with a URL parameter
+    json_result = get_request(url, dealerId=kwargs['dealerId'])
+    print("json_result-", json_result)
+    if json_result:
+        # Get the row list in JSON as dealers
+        reviews = json_result["reviews"]
+        # For each dealer object
+        for review in reviews:
+            # Get its content in `doc` object
+            # dealer_doc = dealer["doc"]
+            # Create a CarDealer object with values in `doc` object
+            review_obj = CarDealer(car_make=review["car_make"], car_model=review["car_model"], 
+                                    car_year=review["car_year"],
+                                   id=review["id"], dealership=review["dealership"], 
+                                   purchase_date=review["purchase_date"],
+                                   name=review["name"],
+                                   purchase=review["purchase"], review=review["review"])
+            results.append(review_obj)
+
+    return results
+
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
