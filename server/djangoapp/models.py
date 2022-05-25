@@ -96,4 +96,4 @@ class DealerReview:
         self.id = id
 
     def __str__(self):
-        return f"Dealer dealership: {self.dealership}, for car make {self.car_make} and review '{self.review}'"
+        return f"Dealer dealership: {self.dealership}, for car make {self.car_make} and review '{self.review}' with sentiment as {self.sentiment}"
