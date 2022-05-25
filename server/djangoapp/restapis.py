@@ -78,18 +78,26 @@ def get_dealer_reviews_from_cf(url, **kwargs):
             # For each dealer object
             for review in reviews:
                 # Get its content in `doc` object
-                print("review obj-", review)
+                # print("review obj-", review)
                 # Create a DealerReview object with values in `review` object
                 if 'sentiment' in review:
                     sentiment = review["sentiment"]
                 else:
                     sentiment = analyze_review_sentiments(review["review"])
-                review_obj = DealerReview(car_make=review["car_make"], car_model=review["car_model"], 
-                                        car_year=review["car_year"],
-                                    id=review["id"], dealership=review["dealership"], 
-                                    purchase_date=review["purchase_date"],
-                                    name=review["name"],
-                                    purchase=review["purchase"], review=review["review"], sentiment=sentiment)                
+                if review["purchase"]:
+                    review_obj = DealerReview(car_make=review["car_make"], car_model=review["car_model"], 
+                                            car_year=review["car_year"],
+                                        id=review["id"], dealership=review["dealership"], 
+                                        purchase_date=review["purchase_date"],
+                                        name=review["name"],
+                                        purchase=review["purchase"], review=review["review"], sentiment=sentiment)
+                else:
+                    review_obj = DealerReview(car_make='', car_model='', 
+                                            car_year='',
+                                        id=review["id"], dealership=review["dealership"], 
+                                        purchase_date='',
+                                        name=review["name"],
+                                        purchase=review["purchase"], review=review["review"], sentiment=sentiment)              
                 results.append(review_obj)
     return results
 
