@@ -9,7 +9,7 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -103,12 +103,25 @@ def get_dealer_details(request, dealer_id):
         url = "https://29a9b6d6.eu-gb.apigw.appdomain.cloud/getallreviews/api/review"
         # Get dealers from the URL
         reviews = get_dealer_reviews_from_cf(url, dealerId=dealer_id)
-        # Concat all dealer's short name
-        # dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-        # Return a list of dealer short name
+        # Return a list of reviews
         return HttpResponse(reviews)
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
-
+def add_review(request, dealer_id):
+    if not request.user.is_authenticated:
+        return HttpResponse("Only logged in userrs can post a review")
+    review = {}
+    review["id"] = 7
+    review["time"] = datetime.utcnow().isoformat()
+    review["dealership"] = 11
+    review["review"] = "This is a great car dealer"
+    # review["purchase"] = False
+    json_payload ={}
+    json_payload["reviews"] = review
+    response = post_request("https://29a9b6d6.eu-gb.apigw.appdomain.cloud/post-review/api/review", json_payload, dealerId=dealer_id)
+    if 'status' in response:
+        return HttpResponse(response["status"])
+    else:
+        return HttpResponse(response["message"])
