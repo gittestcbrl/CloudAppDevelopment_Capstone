@@ -3,7 +3,7 @@ import json
 from requests.auth import HTTPBasicAuth
 # import related models here
 from .models import CarDealer, DealerReview
-
+from django.forms.models import model_to_dict
 
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
@@ -41,7 +41,7 @@ def post_request(url, payload, **kwargs):
         print("Network exception occurred in POST request")
     status_code = response.status_code
     print("With status {} ".format(status_code))
-    print('response in post req', response.text)
+    # print('response in post req', response.text)
     json_data = json.loads(response.text)
     return json_data
 
@@ -65,7 +65,7 @@ def get_dealers_from_cf(url, **kwargs):
                                    id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
                                    short_name=dealer_doc["short_name"],
                                    st=dealer_doc["st"], zip=dealer_doc["zip"])
-            results.append(dealer_obj)
+            results.append(vars(dealer_obj))
     return results
 
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
