@@ -10,7 +10,9 @@ from datetime import datetime
 import logging
 import json
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
-
+from .models import CarModel
+from django.forms.models import model_to_dict
+import random
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -109,6 +111,7 @@ def get_dealer_details(request, dealer_id):
         reviews = get_dealer_reviews_from_cf(url, dealerId=dealer_id)
         # print(reviews)
         context ={}
+        context["dealer_id"] = dealer_id
         context['reviews'] = reviews
         # Return a list of reviews
         return render(request, 'djangoapp/dealer_details.html', context=context)
@@ -118,17 +121,46 @@ def get_dealer_details(request, dealer_id):
 # ...
 def add_review(request, dealer_id):
     if not request.user.is_authenticated:
-        return HttpResponse("Only logged in userrs can post a review")
+        return HttpResponse("Only logged in users can post a review")
+    context = {}
+    context["dealer_id"] = dealer_id
+    cars = CarModel.objects.filter(dealerId=dealer_id)
+    context['cars'] = cars
+    if request.method == 'GET':
+        return render(request, "djangoapp/add_review.html", context=context)
+     
     review = {}
-    review["id"] = 7
+    review["id"] = random.randint(6,1000)
     review["time"] = datetime.utcnow().isoformat()
-    review["dealership"] = 11
-    review["review"] = "This is a great car dealer"
-    # review["purchase"] = False
+    review["dealership"] = dealer_id
+    review["review"] = request.POST['content']
+    review["purchase"] = True if request.POST['purchasecheck'] == 'on' else False
+    review["name"] = f'{request.user.first_name} {request.user.last_name}'
+    carid = request.POST['car']
+    # if review['purchase']:
+    #     if carid == '':
+    #         context['message'] = "Select the car purchased"
+    #         print("car error")
+    #         return render(request, 'djangoapp/add_review.html', context=context)
+    #     elif request.POST['purchasedate'] == '':
+    #         context['message'] = "Select the car purchased"
+    #         print("date errir")
+    #         return render(request, 'djangoapp/add_review.html', context=context)
+    #     else:
+    car = CarModel.objects.get(pk=carid)
+    review['car_make'] = car.make.name
+    review['car_model'] = car.name
+    review['car_year'] = car.year.year
+    review["purchase_date"] = request.POST['purchasedate']
+
     json_payload ={}
     json_payload["reviews"] = review
     response = post_request("https://29a9b6d6.eu-gb.apigw.appdomain.cloud/post-review/api/review", json_payload, dealerId=dealer_id)
+    print("post request send")
     if 'status' in response:
-        return HttpResponse(response["status"])
+        print(response["status"])
+        return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
     else:
+        print(response["message"])
         return HttpResponse(response["message"])
+    

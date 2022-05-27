@@ -39,6 +39,7 @@ def post_request(url, payload, **kwargs):
     except:
         # If any error occurs
         print("Network exception occurred in POST request")
+        return {"message": 'network error in POST'}
     status_code = response.status_code
     print("With status {} ".format(status_code))
     # print('response in post req', response.text)
