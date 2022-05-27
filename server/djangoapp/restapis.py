@@ -104,7 +104,7 @@ def get_dealer_reviews_from_cf(url, **kwargs):
                                         purchase_date='',
                                         name=review["name"],
                                         purchase=review["purchase"], review=review["review"], sentiment=sentiment)              
-                results.append(review_obj)
+                results.append(vars(review_obj))
     return results
 
 
