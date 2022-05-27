@@ -27,7 +27,7 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost", 'car-dealer-review.eu-gb.mybluemix.net']
+ALLOWED_HOSTS = ["localhost", 'car-dealer-review.eu-gb.mybluemix.net', 'sheejasmanak-8000.theiadocker-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
 
 
 # Application definition
@@ -51,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CSRF_TRUSTED_ORIGINS = ['https://sheejasmanak-8000.theiadocker-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
 
 ROOT_URLCONF = 'djangobackend.urls'
 
