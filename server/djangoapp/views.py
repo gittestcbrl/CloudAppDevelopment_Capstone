@@ -57,7 +57,7 @@ def registration_request(request):
     # return render(request, 'djangoapp/registration.html')
     context = {}
     if request.method == 'GET':
-        return render(request, 'djangoapp/registration.html', context)
+        return render(request, 'djangoapp/registration.html', context=context)
     elif request.method == 'POST':
         # Check if user exists
         username = request.POST['username']
@@ -77,7 +77,7 @@ def registration_request(request):
             return redirect("djangoapp:index")
         else:
             context['message'] = "User already exists."
-            return render(request, 'djangoapp/registration.html', context)
+            return render(request, 'djangoapp/registration.html', context=context)
 
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
@@ -98,7 +98,7 @@ def get_dealerships(request):
         # dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
         # return HttpResponse(dealer_names)
-        return render(request, 'djangoapp/index.html', context)
+        return render(request, 'djangoapp/index.html', context=context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
