@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://sheejasmanak-8000.theiadocker-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
+CSRF_TRUSTED_ORIGINS = ['https://sheejasmanak-8000.theiadocker-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai', 'https://car-dealer-review.eu-gb.mybluemix.net']
 
 ROOT_URLCONF = 'djangobackend.urls'
 
